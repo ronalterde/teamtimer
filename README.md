@@ -10,6 +10,12 @@ Check if user 'Franz' has a running session:
 ./query.py Franz
 ```
 
+# Setup
+For the GUI dialog:
+```
+apt-get install python3-tk
+```
+
 # Some use case ideas
 - User A starts a 30 min session at 2018-01-01T16:10
 	- creates file "A-2018-01-01T16:40" containing the end time

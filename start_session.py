@@ -7,6 +7,7 @@ import time
 
 from fs_dir import *
 import config
+import tkgui
 
 if __name__ == "__main__":
     conf = config.load()
@@ -30,10 +31,14 @@ if __name__ == "__main__":
     sessions = fs_session_directory.list_sessions()
     my_sessions = [x for x in sessions if x['owner'] == me]
 
+    requests = []
     if 'requests' in my_sessions[0]:
-        print('Requests available: %s' % str(my_sessions[0]['requests']))
+        requests = my_sessions[0]['requests']
+        print('Requests available: %s' % str(requests))
     else:
         print('No requests filed.')
 
     print('Removing session...')
     fs_session_directory.remove_sessions_owned_by(me)
+
+    tkgui.show_message('Session done.', 'Requests: %s' % str(requests))
