@@ -20,7 +20,7 @@ if __name__ == "__main__":
     fs_session_directory.add_session({'owner' : me, 'end_time' : end_time})
     sessions = fs_session_directory.list_sessions()
 
-    print('Timer (%s minutes) started. End time: %s' % (time_box, end_time))
+    print('Timer (%s) started. End time: %s' % (time_box, end_time))
 
     while datetime.now() < end_time:
         print('Seconds left: ' + str((end_time - datetime.now()).total_seconds()) + '\r', sep=' ', end='', flush=True)
