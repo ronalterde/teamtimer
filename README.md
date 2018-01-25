@@ -1,3 +1,14 @@
+# Usage
+
+Start session as user 'Franz':
+```
+./start_session.py
+```
+
+Check if user 'Franz' has a running session:
+```
+./query.py Franz
+```
 
 # Some use case ideas
 - User A starts a 30 min session at 2018-01-01T16:10
