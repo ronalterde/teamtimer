@@ -26,7 +26,7 @@ if __name__ == "__main__":
     if len(matching_sessions) == 1:
         print('Session for user %s running. Scheduled end time: %s' % (target_user, matching_sessions[0]['end_time']))
         print('Filing request...')
-        modified_session = dict(sessions[0])
+        modified_session = dict(matching_sessions[0])
         modified_session = append_request_to_session(modified_session, me)
         fs_session_directory.update_session(modified_session)
     else:
