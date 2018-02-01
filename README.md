@@ -1,3 +1,5 @@
+Shared timer application for synchronizing users working in intervals (e.g. 25 minutes).
+
 # Usage
 
 Start session as user 'Franz':
