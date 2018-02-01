@@ -5,12 +5,20 @@ Start session as user 'Franz':
 ./start_session.py
 ```
 
-Check if user 'Franz' has a running session:
+Check if user 'Franz' has a running session (and file a request if so):
 ```
 ./query.py Franz
 ```
 
+List all sessions of all users:
+```
+./list.py
+```
+
 # Setup
+Prerequisite:
+Shared folder that all users have read/write access to.
+
 For the GUI dialog:
 ```
 apt-get install python3-tk
