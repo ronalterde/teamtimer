@@ -12,7 +12,7 @@ import tkgui
 class Timer:
     def start(self, end_time):
         while datetime.now() < end_time:
-            print('Seconds left: ' + str((end_time - datetime.now()).total_seconds()) + '\r', sep=' ', end='', flush=True)
+            print('Time left: ' + str((end_time - datetime.now())).split('.')[0] + '\r', sep=' ', end='', flush=True)
             time.sleep(1)
 
 if __name__ == "__main__":
