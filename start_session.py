@@ -6,6 +6,7 @@ import os
 import time
 
 from fs_dir import *
+from session import Session
 import config
 import tkgui
 
@@ -15,16 +16,21 @@ class Timer:
             print('Time left: ' + str((end_time - datetime.now())).split('.')[0] + '\r', sep=' ', end='', flush=True)
             time.sleep(1)
 
+class TimeProvider:
+    def get_current_time(self):
+        return datetime.now()
+
 if __name__ == "__main__":
     conf = config.load()
     base_dir = conf['base_dir']
     me = conf['me']
     time_box = timedelta(seconds=int(conf['time_box_seconds']))
 
-    print('Starting session for user %s ...' % me)
     fs_session_directory = FsSessionDirectory(base_dir)
-    end_time = datetime.now() + time_box
-    fs_session_directory.add_session({'owner' : me, 'end_time' : end_time})
+    session = Session(fs_session_directory, TimeProvider(), me)
+
+    print('Starting session for user %s ...' % me)
+    end_time = session.start(duration=time_box)
 
     timer = Timer()
     print('Starting timer (%s). End time: %s' % (time_box, end_time))
