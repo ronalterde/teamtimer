@@ -32,7 +32,8 @@ class TestTimeProvider:
 class SessionManagerTest(unittest.TestCase):
     def setUp(self):
         self.session_storage = TestSessionStorage()
-        self.manager = SessionManager(self.session_storage)
+        self.time_provider = TestTimeProvider()
+        self.manager = SessionManager(self.session_storage, self.time_provider)
 
     def test_create_session_puts_session_data_into_storage(self):
         self.manager.create_session('Franz', timedelta(seconds=10))
@@ -45,6 +46,32 @@ class SessionManagerTest(unittest.TestCase):
     def test_create_session_doesnt_put_if_username_empty(self):
         self.manager.create_session('', timedelta(seconds=10))
         self.assertEqual(len(self.session_storage.sessions), 0)
+
+    def test_create_session_sets_end_time(self):
+        self.manager.create_session('Franz', timedelta(seconds=10))
+
+        expected_end_time = self.time_provider.current + timedelta(seconds=10)
+        self.assertEqual(self.session_storage.sessions[0]['end_time'], expected_end_time)
+
+    def test_create_session_sets_owner(self):
+        self.manager.create_session('Franz', timedelta(seconds=10))
+        self.assertEqual(self.session_storage.sessions[0]['owner'], 'Franz')
+
+        self.manager.create_session('Helmut', timedelta(seconds=10))
+        self.assertEqual(self.session_storage.sessions[1]['owner'], 'Helmut')
+
+    def test_create_session_removes_all_previous_sessions_of_this_user(self):
+        for i in range(0, 100):
+            self.manager.create_session('Franz', timedelta(seconds=10))
+
+        self.assertEqual(len(self.session_storage.sessions), 1)
+
+    def test_create_session_doesnt_remove_sessions_of_other_users(self):
+        self.manager.create_session('Friedhelm', timedelta(seconds=10))
+        self.manager.create_session('Helmut', timedelta(seconds=10))
+        self.manager.create_session('Franz', timedelta(seconds=10))
+
+        self.assertEqual(len(self.session_storage.sessions), 3)
 
 class SessionTest(unittest.TestCase):
 
