@@ -87,3 +87,12 @@ class TestSession(unittest.TestCase):
         Session(self.directory, self.time_provider, 'Franz').start(duration=self.valid_duration)
 
         self.assertEqual(len(self.directory.sessions), 4)
+
+    def test_stop_returns_filed_requests(self):
+        session = Session(self.directory, self.time_provider, 'Franz')
+        session.start(duration=self.valid_duration)
+        requests = session.stop()
+        self.assertTrue(isinstance(requests, list))
+
+    def test_stop_removes_session_from_directory(self):
+        pass

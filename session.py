@@ -18,5 +18,8 @@ class Session:
         self.directory.add_session({'end_time' : self.end_time(duration), 'owner' : self.username })
         return self.end_time(duration)
 
+    def stop(self):
+        return []
+
     def end_time(self, duration):
         return self.time_provider.get_current_time() + duration
