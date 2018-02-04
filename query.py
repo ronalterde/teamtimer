@@ -6,7 +6,7 @@ import os
 import sys
 import time
 
-from fs_dir import *
+from fs_storage import *
 import config
 
 if __name__ == "__main__":
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     base_dir = conf['base_dir']
     me = conf['me']
 
-    fs_session_directory = FsSessionDirectory(base_dir)
+    fs_session_directory = FileSystemSessionStorage(base_dir)
     sessions = fs_session_directory.list_sessions()
     matching_sessions = [x for x in sessions if x['owner'] == target_user]
 

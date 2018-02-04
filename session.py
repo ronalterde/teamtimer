@@ -2,9 +2,21 @@
 
 from datetime import timedelta
 
+class SessionManager:
+    def __init__(self, session_storage):
+        self.session_storage = session_storage
+
+    def create_session(self, username, duration):
+        if duration.total_seconds() == 0:
+            return
+        if username == '':
+            return
+
+        self.session_storage.add_session({'end_time' : ''})
+
 class Session:
-    def __init__(self, directory, time_provider, username):
-        self.directory = directory
+    def __init__(self, session_storage, time_provider, username):
+        self.session_storage = session_storage
         self.time_provider = time_provider
         self.username = username
     
@@ -14,8 +26,8 @@ class Session:
         if self.username == '':
             return
 
-        self.directory.remove_sessions_owned_by(self.username)
-        self.directory.add_session({'end_time' : self.end_time(duration), 'owner' : self.username })
+        self.session_storage.remove_sessions_owned_by(self.username)
+        self.session_storage.add_session({'end_time' : self.end_time(duration), 'owner' : self.username })
         return self.end_time(duration)
 
     def stop(self):

@@ -5,7 +5,7 @@ from datetime import timedelta
 import os
 import time
 
-from fs_dir import *
+from fs_storage import *
 from session import Session
 import config
 import tkgui
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     me = conf['me']
     time_box = timedelta(seconds=int(conf['time_box_seconds']))
 
-    fs_session_directory = FsSessionDirectory(base_dir)
+    fs_session_directory = FileSystemSessionStorage(base_dir)
     session = Session(fs_session_directory, TimeProvider(), me)
 
     print('Starting session for user %s ...' % me)
