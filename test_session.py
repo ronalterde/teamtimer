@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 import unittest
-from session import Session
-from session import SessionManager
+from session import *
 from datetime import datetime
 from datetime import timedelta
 
@@ -72,6 +71,10 @@ class SessionManagerTest(unittest.TestCase):
         self.manager.create_session('Franz', timedelta(seconds=10))
 
         self.assertEqual(len(self.session_storage.sessions), 3)
+
+    def test_create_session_returns_handle(self):
+        handle = self.manager.create_session('Franz', timedelta(seconds=10))
+        self.assertTrue(isinstance(handle, PublisherSessionHandle))
 
 class SessionTest(unittest.TestCase):
 

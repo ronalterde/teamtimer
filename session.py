@@ -2,6 +2,9 @@
 
 from datetime import timedelta
 
+class PublisherSessionHandle:
+    pass
+
 class SessionManager:
     def __init__(self, session_storage, time_provider):
         self.session_storage = session_storage
@@ -18,6 +21,8 @@ class SessionManager:
             'end_time' : self._calculate_end_time(duration),
             'owner' : username
         })
+
+        return PublisherSessionHandle()
 
     def _calculate_end_time(self, duration):
         return self.time_provider.get_current_time() + duration
