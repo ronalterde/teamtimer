@@ -7,6 +7,8 @@ import time
 
 from fs_storage import *
 from session import Session
+from session import SessionManager
+from session import PublisherSessionHandle
 import config
 import tkgui
 
@@ -26,18 +28,18 @@ if __name__ == "__main__":
     me = conf['me']
     time_box = timedelta(seconds=int(conf['time_box_seconds']))
 
-    fs_session_directory = FileSystemSessionStorage(base_dir)
-    session = Session(fs_session_directory, TimeProvider(), me)
+    fs_session_storage = FileSystemSessionStorage(base_dir)
+    session_manager = SessionManager(fs_session_storage, TimeProvider())
 
     print('Starting session for user %s ...' % me)
-    end_time = session.start(duration=time_box)
+    publisher_handle = session_manager.create_session(me, time_box)
 
     timer = Timer()
-    print('Starting timer (%s). End time: %s' % (time_box, end_time))
-    timer.start(end_time)
+    print('Starting timer (%s). End time: %s' % (time_box, publisher_handle.get_end_time()))
+    timer.start(publisher_handle.get_end_time())
     print('Session done.')
 
-    sessions = fs_session_directory.list_sessions()
+    sessions = fs_session_storage.list_sessions()
     my_sessions = [x for x in sessions if x['owner'] == me]
 
     requests = []
@@ -48,6 +50,6 @@ if __name__ == "__main__":
         print('No requests filed.')
 
     print('Removing session...')
-    fs_session_directory.remove_sessions_owned_by(me)
+    fs_session_storage.remove_sessions_owned_by(me)
 
     tkgui.show_message('Session done.', 'Requests: %s' % str(requests))

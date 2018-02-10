@@ -19,7 +19,7 @@ class TestSessionStorage:
         pass
 
     def list_sessions(self):
-        pass
+        return self.sessions
 
 class TestTimeProvider:
     def __init__(self):
@@ -76,14 +76,34 @@ class SessionManagerTest(unittest.TestCase):
         handle = self.manager.create_session('Franz', timedelta(seconds=10))
         self.assertTrue(isinstance(handle, PublisherSessionHandle))
 
+    def test_create_session_passes_owner_to_handle(self):
+        handle = self.manager.create_session('Franz', timedelta(seconds=10))
+        self.assertEqual(handle.owner, 'Franz')
+
+        handle = self.manager.create_session('Helmut', timedelta(seconds=10))
+        self.assertEqual(handle.owner, 'Helmut')
+
 class PublisherSessionHandleTest(unittest.TestCase):
     def setUp(self):
         self.session_storage = TestSessionStorage()
-        self.handle = PublisherSessionHandle(self.session_storage)
+        self.time_provider = TestTimeProvider()
+        self.manager = SessionManager(self.session_storage, self.time_provider)
 
-    def test_stop_throws_if_no_session_in_storage(self):
-        pass
-        # self.assertRaises(Exception, self.handle.stop())
+    # def test_stop_throws_if_no_session_in_storage(self):
+    #     self.assertRaises(Exception, self.handle.stop())
+
+    def test_stop_removes_session_from_storage(self):
+        handle = self.manager.create_session('Franz', timedelta(seconds=10))
+        self.assertEqual(len(self.session_storage.sessions), 1)
+        handle.stop()
+        self.assertEqual(len(self.session_storage.sessions), 0)
+
+    def test_get_end_time_returns_time_from_storage(self):
+        self.manager.create_session('Helmut', timedelta(seconds=10))
+        self.session_storage.sessions[0]['end_time'] = datetime(2018, 10, 11, 5, 12, 23, 1)
+
+        handle = self.manager.create_session('Franz', timedelta(seconds=10))
+        self.assertEqual(self.session_storage.sessions[1]['end_time'], handle.get_end_time())
 
 class SessionTest(unittest.TestCase):
     def setUp(self):
