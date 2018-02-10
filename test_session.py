@@ -76,8 +76,16 @@ class SessionManagerTest(unittest.TestCase):
         handle = self.manager.create_session('Franz', timedelta(seconds=10))
         self.assertTrue(isinstance(handle, PublisherSessionHandle))
 
-class SessionTest(unittest.TestCase):
+class PublisherSessionHandleTest(unittest.TestCase):
+    def setUp(self):
+        self.session_storage = TestSessionStorage()
+        self.handle = PublisherSessionHandle(self.session_storage)
 
+    def test_stop_throws_if_no_session_in_storage(self):
+        pass
+        # self.assertRaises(Exception, self.handle.stop())
+
+class SessionTest(unittest.TestCase):
     def setUp(self):
         self.valid_duration = timedelta(seconds=10)
         self.session_storage = TestSessionStorage()
