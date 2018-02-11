@@ -50,6 +50,6 @@ if __name__ == "__main__":
         print('No requests filed.')
 
     print('Removing session...')
-    fs_session_storage.remove_sessions_owned_by(me)
+    publisher_handle.stop()
 
     tkgui.show_message('Session done.', 'Requests: %s' % str(requests))
