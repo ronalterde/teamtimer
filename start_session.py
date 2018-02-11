@@ -9,18 +9,9 @@ from fs_storage import *
 from session import Session
 from session import SessionManager
 from session import PublisherSessionHandle
+import time_utils
 import config
 import tkgui
-
-class Timer:
-    def start(self, end_time):
-        while datetime.now() < end_time:
-            print('Time left: ' + str((end_time - datetime.now())).split('.')[0] + '\r', sep=' ', end='', flush=True)
-            time.sleep(1)
-
-class TimeProvider:
-    def get_current_time(self):
-        return datetime.now()
 
 if __name__ == "__main__":
     conf = config.load()
@@ -29,12 +20,12 @@ if __name__ == "__main__":
     time_box = timedelta(seconds=int(conf['time_box_seconds']))
 
     fs_session_storage = FileSystemSessionStorage(base_dir)
-    session_manager = SessionManager(fs_session_storage, TimeProvider())
+    session_manager = SessionManager(fs_session_storage, time_utils.TimeProvider())
 
     print('Starting session for user %s ...' % me)
     publisher_handle = session_manager.create_session(me, time_box)
 
-    timer = Timer()
+    timer = time_utils.Timer()
     print('Starting timer (%s). End time: %s' % (time_box, publisher_handle.get_end_time()))
     timer.start(publisher_handle.get_end_time())
     print('Session done.')
