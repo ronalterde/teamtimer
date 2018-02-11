@@ -96,7 +96,7 @@ class SessionManagerTest(unittest.TestCase):
         self.manager.create_session('Franz', timedelta(seconds=10))
         self.manager.create_session('Helmut', timedelta(seconds=10))
         handlers = self.manager.get_running_sessions()
-        owners = [handler.owner for handler in handlers]
+        owners = [handle.owner for handle in handlers]
         self.assertEqual(len(owners), 2)
         self.assertTrue('Franz' in owners)
         self.assertTrue('Helmut' in owners)
@@ -142,6 +142,11 @@ class ObserverSessionHandleTest(unittest.TestCase):
 
     def test_request_goes_into_storage(self):
         self.manager.create_session('Franz', timedelta(seconds=10))
-        handler = self.manager.get_running_sessions()[0]
-        handler.make_request('Hans')
+        handle = self.manager.get_running_sessions()[0]
+        handle.make_request('Hans')
         self.assertEqual(self.session_storage.sessions[0]['requests'], ['Hans'])
+
+    def test_get_end_time_is_from_base_class(self):
+        self.manager.create_session('Franz', timedelta(seconds=10))
+        handle = self.manager.get_running_sessions()[0]
+        handle.get_end_time()

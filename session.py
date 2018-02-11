@@ -3,18 +3,19 @@
 from datetime import timedelta
 import storage
 
-class PublisherSessionHandle:
+class SessionHandle:
+    def get_end_time(self):
+        sessions = self.session_storage.list_sessions()
+        my_sessions = [x for x in sessions if x['owner'] == self.owner]
+        return my_sessions[0]['end_time']
+
+class PublisherSessionHandle(SessionHandle):
     def __init__(self, session_storage, owner):
         self.session_storage = session_storage
         self.owner = owner
 
     def stop(self):
         self.session_storage.remove_sessions_owned_by(self.owner)
-
-    def get_end_time(self):
-        sessions = self.session_storage.list_sessions()
-        my_sessions = [x for x in sessions if x['owner'] == self.owner]
-        return my_sessions[0]['end_time']
 
     def get_requests(self):
         session = self._get_my_session()
@@ -29,7 +30,7 @@ class PublisherSessionHandle:
         my_sessions = [x for x in sessions if x['owner'] == self.owner]
         return my_sessions[0]
 
-class ObserverSessionHandle:
+class ObserverSessionHandle(SessionHandle):
     def __init__(self, session_storage, owner):
         self.session_storage = session_storage
         self.owner = owner
