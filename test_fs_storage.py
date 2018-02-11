@@ -37,14 +37,3 @@ class TestSessionString(unittest.TestCase):
                 { 'owner' : 'A', 'end_time' : datetime(2018, 1, 1, 20, 15), 'requests' : [ 'A' ] })
         self.assertEqual(file_to_session('A_2018-01-01T20:15:00', 'A\nB'),
                 { 'owner' : 'A', 'end_time' : datetime(2018, 1, 1, 20, 15), 'requests' : [ 'A', 'B' ] })
-
-    def test_append_request_to_session(self):
-        new_session = append_request_to_session({ 'owner' : 'A', 'end_time' : datetime(2018, 1, 1, 20, 15) }, 'A')
-        self.assertTrue('requests' in new_session)
-        self.assertEqual(new_session['requests'], [ 'A' ])
-
-        new_session2 = append_request_to_session(new_session, 'B')
-        self.assertEqual(new_session['requests'], [ 'A', 'B' ])
-
-        self.assertEqual(new_session2, { 'owner' : 'A', 'end_time' : datetime(2018, 1, 1, 20, 15), 'requests' : [ 'A', 'B' ]})
-

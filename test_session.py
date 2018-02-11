@@ -16,7 +16,8 @@ class TestSessionStorage:
         self.sessions = [s for s in self.sessions if s['owner'] != owner]
 
     def update_session(self, session):
-        pass
+        self.remove_sessions_owned_by(session['owner'])
+        self.sessions.append(session)
 
     def list_sessions(self):
         return self.sessions
@@ -83,6 +84,23 @@ class SessionManagerTest(unittest.TestCase):
         handle = self.manager.create_session('Helmut', timedelta(seconds=10))
         self.assertEqual(handle.owner, 'Helmut')
 
+    def test_get_running_sessions_returns_empty_list(self):
+        self.assertEqual(self.manager.get_running_sessions(), [])
+        running_sessions = self.manager.get_running_sessions()
+
+    def test_get_running_sessions_returns_list_of_observer_handles(self):
+        self.manager.create_session('Franz', timedelta(seconds=10))
+        self.assertTrue(isinstance(self.manager.get_running_sessions()[0], ObserverSessionHandle))
+
+    def test_get_running_sessions_puts_owner_into_handle(self):
+        self.manager.create_session('Franz', timedelta(seconds=10))
+        self.manager.create_session('Helmut', timedelta(seconds=10))
+        handlers = self.manager.get_running_sessions()
+        owners = [handler.owner for handler in handlers]
+        self.assertEqual(len(owners), 2)
+        self.assertTrue('Franz' in owners)
+        self.assertTrue('Helmut' in owners)
+
 class PublisherSessionHandleTest(unittest.TestCase):
     def setUp(self):
         self.session_storage = TestSessionStorage()
@@ -115,3 +133,15 @@ class PublisherSessionHandleTest(unittest.TestCase):
 
         self.session_storage.sessions[0]['requests'] = [ 'Hans', 'Lenz' ]
         self.assertEqual(handle.get_requests(), ['Hans', 'Lenz'])
+
+class ObserverSessionHandleTest(unittest.TestCase):
+    def setUp(self):
+        self.session_storage = TestSessionStorage()
+        self.time_provider = TestTimeProvider()
+        self.manager = SessionManager(self.session_storage, self.time_provider)
+
+    def test_request_goes_into_storage(self):
+        self.manager.create_session('Franz', timedelta(seconds=10))
+        handler = self.manager.get_running_sessions()[0]
+        handler.make_request('Hans')
+        self.assertEqual(self.session_storage.sessions[0]['requests'], ['Hans'])

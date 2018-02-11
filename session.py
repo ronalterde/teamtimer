@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from datetime import timedelta
+import storage
 
 class PublisherSessionHandle:
     def __init__(self, session_storage, owner):
@@ -28,6 +29,18 @@ class PublisherSessionHandle:
         my_sessions = [x for x in sessions if x['owner'] == self.owner]
         return my_sessions[0]
 
+class ObserverSessionHandle:
+    def __init__(self, session_storage, owner):
+        self.session_storage = session_storage
+        self.owner = owner
+
+    def make_request(self, me):
+        sessions = self.session_storage.list_sessions()
+        matching_sessions = [x for x in sessions if x['owner'] == self.owner]
+        modified_session = dict(matching_sessions[0])
+        modified_session = storage.append_request_to_session(modified_session, me)
+        self.session_storage.update_session(modified_session)
+
 class SessionManager:
     def __init__(self, session_storage, time_provider):
         self.session_storage = session_storage
@@ -49,3 +62,10 @@ class SessionManager:
 
     def _calculate_end_time(self, duration):
         return self.time_provider.get_current_time() + duration
+
+    def get_running_sessions(self):
+        sessions = self.session_storage.list_sessions()
+        handlers = []
+        for i in sessions:
+            handlers.append(ObserverSessionHandle(self.session_storage, i['owner']))
+        return handlers

@@ -26,16 +26,6 @@ def file_to_session(file_name, content):
         session['requests'] = content.split()
     return session 
 
-def append_request_to_session(session, request):
-    new_session = dict(session)
-
-    if 'requests' in new_session:
-        new_session['requests'].append(request)
-        return new_session
-    else:
-        new_session['requests'] = [ request ]
-        return new_session
-
 # This takes care of the concrete file and directory handling:
 class FileSystemSessionStorage:
     def __init__(self, base_path):
