@@ -13,11 +13,12 @@ import time_utils
 import config
 import tkgui
 
-if __name__ == "__main__":
+def read_from_config():
     conf = config.load()
-    base_dir = conf['base_dir']
-    me = conf['me']
-    time_box = timedelta(seconds=int(conf['time_box_seconds']))
+    return conf['base_dir'], conf['me'], timedelta(seconds=int(conf['time_box_seconds']))
+
+if __name__ == "__main__":
+    base_dir, me, time_box = read_from_config()
 
     fs_session_storage = FileSystemSessionStorage(base_dir)
     session_manager = SessionManager(fs_session_storage, time_utils.TimeProvider())
@@ -40,4 +41,3 @@ if __name__ == "__main__":
 
     print('Finishing session...')
     publisher_handle.stop()
-
