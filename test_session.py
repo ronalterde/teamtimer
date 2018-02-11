@@ -105,6 +105,17 @@ class PublisherSessionHandleTest(unittest.TestCase):
         handle = self.manager.create_session('Franz', timedelta(seconds=10))
         self.assertEqual(self.session_storage.sessions[1]['end_time'], handle.get_end_time())
 
+    def test_get_requests(self):
+        handle = self.manager.create_session('Franz', timedelta(seconds=10))
+        
+        self.assertEqual(handle.get_requests(), [])
+
+        self.session_storage.sessions[0]['requests'] = [ 'Hans' ]
+        self.assertEqual(handle.get_requests(), ['Hans'])
+
+        self.session_storage.sessions[0]['requests'] = [ 'Hans', 'Lenz' ]
+        self.assertEqual(handle.get_requests(), ['Hans', 'Lenz'])
+
 class SessionTest(unittest.TestCase):
     def setUp(self):
         self.valid_duration = timedelta(seconds=10)

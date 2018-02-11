@@ -15,6 +15,19 @@ class PublisherSessionHandle:
         my_sessions = [x for x in sessions if x['owner'] == self.owner]
         return my_sessions[0]['end_time']
 
+    def get_requests(self):
+        session = self._get_my_session()
+        if 'requests' in session:
+            return session['requests']
+        else:
+            return []
+
+    def _get_my_session(self):
+        """TODO: Storage should ensure there's only one session per user."""
+        sessions = self.session_storage.list_sessions()
+        my_sessions = [x for x in sessions if x['owner'] == self.owner]
+        return my_sessions[0]
+
 class SessionManager:
     def __init__(self, session_storage, time_provider):
         self.session_storage = session_storage

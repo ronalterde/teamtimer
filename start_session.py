@@ -39,17 +39,14 @@ if __name__ == "__main__":
     timer.start(publisher_handle.get_end_time())
     print('Session done.')
 
-    sessions = fs_session_storage.list_sessions()
-    my_sessions = [x for x in sessions if x['owner'] == me]
-
-    requests = []
-    if 'requests' in my_sessions[0]:
-        requests = my_sessions[0]['requests']
+    requests = publisher_handle.get_requests()
+    if len(requests):
         print('Requests available: %s' % str(requests))
+        tkgui.show_message('Session done.', 'Requests: %s' % str(requests))
     else:
         print('No requests filed.')
+        tkgui.show_message('Session done.', 'No requests filed.')
 
-    print('Removing session...')
+    print('Finishing session...')
     publisher_handle.stop()
 
-    tkgui.show_message('Session done.', 'Requests: %s' % str(requests))
