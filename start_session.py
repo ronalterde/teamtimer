@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
 from datetime import timedelta
-import os
-import time
 
-from fs_storage import *
-from session import Session
-from session import SessionManager
-from session import PublisherSessionHandle
-import time_utils
 import config
+import fs_storage
+import session
+import time_utils
 import tkgui
 
 def read_from_config():
@@ -20,8 +15,8 @@ def read_from_config():
 if __name__ == "__main__":
     base_dir, me, time_box = read_from_config()
 
-    fs_session_storage = FileSystemSessionStorage(base_dir)
-    session_manager = SessionManager(fs_session_storage, time_utils.TimeProvider())
+    fs_session_storage = fs_storage.FileSystemSessionStorage(base_dir)
+    session_manager = session.SessionManager(fs_session_storage, time_utils.TimeProvider())
 
     print('Starting session for user %s ...' % me)
     publisher_handle = session_manager.create_session(me, time_box)
