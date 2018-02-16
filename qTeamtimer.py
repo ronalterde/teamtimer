@@ -10,6 +10,8 @@ from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQuick import QQuickView
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtCore import QStringListModel, QUrl, QTimer, QObject, pyqtSlot
+from OpenGL import GLU
+from OpenGL import GL
 
 from fs_storage import *
 import config
