@@ -6,7 +6,7 @@ import config
 import fs_storage
 import session
 import time_utils
-import tkgui
+import notify
 
 def read_from_config():
     conf = config.load()
@@ -29,10 +29,10 @@ if __name__ == "__main__":
     requests = publisher_handle.get_requests()
     if len(requests):
         print('Requests available: %s' % str(requests))
-        tkgui.show_message('Session done.', 'Requests: %s' % str(requests))
+        notify.show_message('Teamtimer session done.', 'Requests: %s' % str(requests))
     else:
         print('No requests filed.')
-        tkgui.show_message('Session done.', 'No requests filed.')
+        notify.show_message('Teamtimer session done.', 'No requests filed.')
 
     print('Finishing session...')
     publisher_handle.stop()

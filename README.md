@@ -21,9 +21,9 @@ List all sessions of all users:
 Prerequisite:
 Shared folder that all users have read/write access to.
 
-For the GUI dialog:
+For the GUI notification:
 ```
-apt-get install python3-tk
+apt-get install python-gobject libnotify
 ```
 
 # Some use case ideas
