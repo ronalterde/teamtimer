@@ -21,9 +21,9 @@ List all sessions of all users:
 Prerequisite:
 Shared folder that all users have read/write access to.
 
-For the GUI dialog:
+For the Qt-based GUI:
 ```
-apt-get install python3-tk
+apt-get install python3-opengl python3-pyqt5.qtopengl python3-pyqt5.qtquick
 ```
 
 # Some use case ideas
