@@ -58,3 +58,17 @@ apt-get install python3-tk
 	- Samba
 	- local file system
 	- scp?
+
+# Privacy Considerations
+## Prevent users from checking other's working state
+- instead of a central repository, there's a daemon running on every user's machine.
+- communication is via UDP broadcast or multicast
+- It's impossible for User B to check whether A has a running session.
+- User B wants to talk to A after his session:
+	- B sends a broadcast addressed with A
+		- includes his public key
+	- 3 possible outcomes:
+		- A is not logged in at all -> no reply
+		- A has no session running at the moment -> broadcasts 'no session' encrypted with public key of B
+		- A has a session running -> broadcasts 'end time' encrypted with public key of B
+
