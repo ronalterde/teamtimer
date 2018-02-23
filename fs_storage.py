@@ -44,7 +44,13 @@ class FileSystemSessionStorage:
         with open(self.base_path + '/' + session_to_file_name(session), 'w') as session_file:
             session_file.write(session_to_file_content(session))
 
-    def list_sessions(self):
+    def get_session_owned_by(self, owner):
+        matching_sessions = [s for s in self._list_sessions() if s['owner'] == owner]
+        if len(matching_sessions) == 0:
+            return None
+        return matching_sessions[0]
+
+    def _list_sessions(self):
         files = os.listdir(self.base_path)
         sessions = []
         for f in files:
@@ -56,7 +62,7 @@ class FileSystemSessionStorage:
 if __name__ == "__main__":
     fs_session_storage = FileSystemSessionStorage('./test')
     fs_session_storage.add_session({'owner' : 'A', 'end_time' : datetime.now() + timedelta(minutes=30)})
-    sessions = fs_session_storage.list_sessions()
+    sessions = fs_session_storage._list_sessions()
     print(sessions)
     time.sleep(10)
     modified_session = dict(sessions[0])
@@ -64,7 +70,7 @@ if __name__ == "__main__":
     modified_session = append_request_to_session(modified_session, 'User B')
     modified_session = append_request_to_session(modified_session, 'User C')
     fs_session_storage.update_session(modified_session)
-    sessions = fs_session_storage.list_sessions()
+    sessions = fs_session_storage._list_sessions()
     print(sessions)
     time.sleep(20)
     fs_session_storage.remove_sessions_owned_by('A')

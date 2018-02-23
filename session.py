@@ -5,9 +5,8 @@ import storage
 
 class SessionHandle:
     def get_end_time(self):
-        sessions = self.session_storage.list_sessions()
-        my_sessions = [x for x in sessions if x['owner'] == self.owner]
-        return my_sessions[0]['end_time']
+        my_session = self.session_storage.get_session_owned_by(self.owner)
+        return my_session['end_time']
 
 class PublisherSessionHandle(SessionHandle):
     def __init__(self, session_storage, owner):
@@ -18,17 +17,12 @@ class PublisherSessionHandle(SessionHandle):
         self.session_storage.remove_sessions_owned_by(self.owner)
 
     def get_requests(self):
-        session = self._get_my_session()
+        """TODO: Storage should ensure there's only one session per user."""
+        session = self.session_storage.get_session_owned_by(self.owner)
         if 'requests' in session:
             return session['requests']
         else:
             return []
-
-    def _get_my_session(self):
-        """TODO: Storage should ensure there's only one session per user."""
-        sessions = self.session_storage.list_sessions()
-        my_sessions = [x for x in sessions if x['owner'] == self.owner]
-        return my_sessions[0]
 
 class ObserverSessionHandle(SessionHandle):
     def __init__(self, session_storage, owner):
@@ -36,9 +30,8 @@ class ObserverSessionHandle(SessionHandle):
         self.owner = owner
 
     def make_request(self, me):
-        sessions = self.session_storage.list_sessions()
-        matching_sessions = [x for x in sessions if x['owner'] == self.owner]
-        modified_session = dict(matching_sessions[0])
+        session = self.session_storage.get_session_owned_by(self.owner)
+        modified_session = dict(session)
         modified_session = storage.append_request_to_session(modified_session, me)
         self.session_storage.update_session(modified_session)
 
@@ -64,9 +57,8 @@ class SessionManager:
     def _calculate_end_time(self, duration):
         return self.time_provider.get_current_time() + duration
 
-    def get_running_sessions(self):
-        sessions = self.session_storage.list_sessions()
-        handlers = []
-        for i in sessions:
-            handlers.append(ObserverSessionHandle(self.session_storage, i['owner']))
-        return handlers
+    def get_running_session(self, owner):
+        session = self.session_storage.get_session_owned_by(owner)
+        if session == None:
+            return None
+        return ObserverSessionHandle(self.session_storage, session['owner'])

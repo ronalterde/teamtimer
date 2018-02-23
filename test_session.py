@@ -19,8 +19,11 @@ class TestSessionStorage:
         self.remove_sessions_owned_by(session['owner'])
         self.sessions.append(session)
 
-    def list_sessions(self):
-        return self.sessions
+    def get_session_owned_by(self, owner):
+        matching_sessions = [s for s in self.sessions if s['owner'] == owner]
+        if len(matching_sessions) == 0:
+            return None
+        return matching_sessions[0]
 
 class TestTimeProvider:
     def __init__(self):
@@ -84,22 +87,18 @@ class SessionManagerTest(unittest.TestCase):
         handle = self.manager.create_session('Helmut', timedelta(seconds=10))
         self.assertEqual(handle.owner, 'Helmut')
 
-    def test_get_running_sessions_returns_empty_list(self):
-        self.assertEqual(self.manager.get_running_sessions(), [])
-        running_sessions = self.manager.get_running_sessions()
+    def test_get_running_session_returns_none(self):
+        self.assertEqual(self.manager.get_running_session('NotExistingOwner'), None)
 
-    def test_get_running_sessions_returns_list_of_observer_handles(self):
+    def test_get_running_session_returns_observer_handle(self):
         self.manager.create_session('Franz', timedelta(seconds=10))
-        self.assertTrue(isinstance(self.manager.get_running_sessions()[0], ObserverSessionHandle))
+        self.assertTrue(isinstance(self.manager.get_running_session('Franz'), ObserverSessionHandle))
 
-    def test_get_running_sessions_puts_owner_into_handle(self):
+    def test_get_running_session_puts_owner_into_handle(self):
         self.manager.create_session('Franz', timedelta(seconds=10))
         self.manager.create_session('Helmut', timedelta(seconds=10))
-        handlers = self.manager.get_running_sessions()
-        owners = [handle.owner for handle in handlers]
-        self.assertEqual(len(owners), 2)
-        self.assertTrue('Franz' in owners)
-        self.assertTrue('Helmut' in owners)
+        self.assertEqual(self.manager.get_running_session('Franz').owner, 'Franz')
+        self.assertEqual(self.manager.get_running_session('Helmut').owner, 'Helmut')
 
 class PublisherSessionHandleTest(unittest.TestCase):
     def setUp(self):
@@ -142,11 +141,11 @@ class ObserverSessionHandleTest(unittest.TestCase):
 
     def test_request_goes_into_storage(self):
         self.manager.create_session('Franz', timedelta(seconds=10))
-        handle = self.manager.get_running_sessions()[0]
+        handle = self.manager.get_running_session('Franz')
         handle.make_request('Hans')
         self.assertEqual(self.session_storage.sessions[0]['requests'], ['Hans'])
 
     def test_get_end_time_is_from_base_class(self):
         self.manager.create_session('Franz', timedelta(seconds=10))
-        handle = self.manager.get_running_sessions()[0]
+        handle = self.manager.get_running_session('Franz')
         handle.get_end_time()

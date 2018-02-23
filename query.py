@@ -24,16 +24,13 @@ if __name__ == "__main__":
     fs_session_storage = fs_storage.FileSystemSessionStorage(base_dir)
     session_manager = session.SessionManager(fs_session_storage, time_utils.TimeProvider())
 
-    handlers = session_manager.get_running_sessions()
-    matching_handles = [handle for handle in handlers if handle.owner == target_user]
-    if len(matching_handles) > 1:
-        print('Error: more than one handle for user %s found!' % target_user)
-        exit(1)
-    if len(matching_handles) == 1:
+    handle = session_manager.get_running_session(target_user)
+    if handle != None:
         print('Session for user %s running.' % (target_user))
-        print('Session for user %s running. Scheduled end time: %s' % (target_user, matching_handles[0].get_end_time()))
+        print('Session for user %s running. Scheduled end time: %s' % (target_user, handle.get_end_time()))
         print('Filing request...')
-        matching_handles[0].make_request(me)
+        handle.make_request(me)
     else:
         print('No session for user %s running.' % target_user)
+
 
