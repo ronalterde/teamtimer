@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="11.3">
+  <zoom_level>9</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>486</x>
+      <y>108</y>
+      <w>378</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>SessionManager
+--
+create_session(): PublisherSessionHandle
+get_running_session(owner): ObserverSessionHandle</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>36</x>
+      <y>72</y>
+      <w>189</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>PublisherSessionHandle
+--
+stop()
+get_requests()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>288</x>
+      <y>72</y>
+      <w>171</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>ObserverSessionHandle
+--
+make_request()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>351</x>
+      <y>270</y>
+      <w>243</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>/SessionStorage/
+--
+add_session(owner, data)
+remove_sessions_owned_by(owner)
+get_session_owned_by(owner)
+update_session(owner, new_data)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>441</x>
+      <y>180</y>
+      <w>107</w>
+      <h>107</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>27;90;90;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>99</x>
+      <y>117</y>
+      <w>305</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>288;153;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>324</x>
+      <y>99</y>
+      <w>116</w>
+      <h>188</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>99;171;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>144</x>
+      <y>441</y>
+      <w>243</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>FileSystemSessionStorage
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>243</x>
+      <y>351</y>
+      <w>152</w>
+      <h>107</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>135;27;27;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>576</x>
+      <y>459</y>
+      <w>243</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>PeerToPeerSessionStorage
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>558</x>
+      <y>351</y>
+      <w>143</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>27;27;126;108</additional_attributes>
+  </element>
+</diagram>
